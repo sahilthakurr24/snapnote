@@ -1,6 +1,6 @@
 
 SNAPNOTE
 
-An AI based project
+An AI based project.
 
 
