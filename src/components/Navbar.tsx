@@ -1,14 +1,15 @@
+
 import { shadow } from "@/styles/utils";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./Mode-toggle";
 import LogoutButton from "./LogoutButton";
 import { Separator } from "./ui/separator";
+import { getUser } from "@/auth/server";
 
-function Navbar() {
-    const user:boolean = false
+async function Navbar() {
+    const user =  await getUser();
   return (
     <header
       className="bg-popover relative flex h-24 w-full items-center justify-between px-3 sm:px-8 border"
@@ -22,8 +23,8 @@ function Navbar() {
       <div className="flex gap-4">
         {user ? (
 
-        //   <LogoutButton/>
-        "lol"
+       <LogoutButton/>
+        
         ) : (
           <>
              <Button asChild>

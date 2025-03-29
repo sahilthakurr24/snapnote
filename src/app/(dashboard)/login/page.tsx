@@ -1,5 +1,3 @@
-// app/login/page.tsx
-
 "use client";
 
 import {
@@ -14,14 +12,49 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTransition } from "react";
+import { login } from "@/actions/user";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { title } from "process";
+import { Description, Title } from "@radix-ui/react-toast";
+
 
 export default function LoginPage() {
-  const handleSubmit = (e: React.FormEvent) => {
+    const [isPending, startTransition] = useTransition();
+    const {toast} = useToast();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle login logic here
-    alert("Login submitted!");
-  };
+    const formData = new FormData(e.currentTarget);
 
+    try {
+      startTransition(async () => {
+       const {error} =  await login(formData);
+        toast({
+            title : "success",
+            description : "Login successfully",
+            variant : "success"
+        })
+
+        if (error) {
+        
+            toast({
+                title : "Error",
+                description :  error.message ||" Unable to Login",
+                variant : "destructive"
+            })
+        }
+
+      });
+    } catch (error) {
+      console.log("something went wrong");
+      toast({
+        title : "error",
+        description : " Unable to Login",
+        variant : "destructive"
+    })
+    }
+  };
   return (
     <div className=" flex flex-1 flex-col items-center justify-center">
       <Card className="w-full max-w-md">
@@ -38,6 +71,7 @@ export default function LoginPage() {
               <Input
                 id="email"
                 type="email"
+                name="email"
                 placeholder="m@example.com"
                 required
               />
@@ -46,13 +80,14 @@ export default function LoginPage() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 required
                 placeholder="••••••••"
               />
             </div>
-            <Button type="submit" className="w-full cursor-pointer">
-              Log in
+            <Button disabled= {isPending} type="submit" className="w-full cursor-pointer">
+             {isPending ? (<Loader2 className="animate-spin"/>): ("Login")}
             </Button>
           </form>
         </CardContent>

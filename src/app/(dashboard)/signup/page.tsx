@@ -1,22 +1,40 @@
-// app/login/page.tsx
-
 "use client";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTransition } from "react";
+import { signup } from "@/actions/user";
+import { Loader2 } from "lucide-react";
+import { toast, useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isPending, startTransition] = useTransition();
+  const {toast} = useToast();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle login logic here
-    alert("Login submitted!");
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      startTransition(async () => {
+    const {error} =  await signup(formData);
+    if (error) {
+        toast({
+            title : "Error",
+            description : error.message,
+            variant : "destructive"
+        })
+    }
+      });
+    } catch (error) {
+      console.log("something went wrong");
+    }
   };
 
   return (
-    <div className=" flex flex-1 flex-col items-center justify-center">
+    <div className="flex flex-1 flex-col items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-3xl">Snapnote</CardTitle>
@@ -27,9 +45,10 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="text">Username</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="text"
+                id="username"
+                name="username"
                 type="text"
                 required
                 placeholder="Enter your username"
@@ -39,8 +58,9 @@ export default function LoginPage() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
-                placeholder="Enter your emal"
+                placeholder="Enter your email"
                 required
               />
             </div>
@@ -48,13 +68,14 @@ export default function LoginPage() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 required
                 placeholder="Enter your password"
               />
             </div>
             <Button type="submit" className="w-full cursor-pointer">
-              Sign-up
+            {isPending ? (<Loader2 className="animate-spin"/>): ("Signup")}
             </Button>
           </form>
         </CardContent>
