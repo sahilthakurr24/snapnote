@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/auth/server";
-import { tryLoadManifestWithRetries } from "next/dist/server/load-components";
+
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
@@ -33,6 +33,7 @@ export async function signup(formData: FormData) {
   const details = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
+    username : formData.get("username") as string
   };
 
   const { data, error } = await supabase.auth.signUp(details);
@@ -57,6 +58,8 @@ export async function logout() {
   const supabase = await createClient();
   try {
     await supabase.auth.signOut();
+    revalidatePath("/", "layout");
+    redirect("/login");
   } catch (error) {
     throw new Error("unable to logout");
   }

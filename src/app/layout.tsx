@@ -35,7 +35,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="min-h-screen flex justify-center items-center bg-popover">
+            {children}
+          </div>
           <Toaster />
         </ThemeProvider>
       </body>

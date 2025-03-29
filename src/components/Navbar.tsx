@@ -17,7 +17,7 @@ async function Navbar() {
     >
       <Link   prefetch={false} className="flex items-end gap-2" href={"/"}>
         <h1 className="flex flex-col pb-1 text-2xl leading-6 font-semibold">
-          Snap<span>Note</span>
+          SnapNote
         </h1>
       </Link>
       <div className="flex gap-4">
