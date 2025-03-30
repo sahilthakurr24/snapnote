@@ -2,7 +2,7 @@
 import { getUser } from "@/auth/server";
 import NewNoteButton from "@/components/NewNoteButton";
 import NoteTextInput from "@/components/NoteTextInput";
-import { Button } from "@/components/ui/button";
+import { User } from "@prisma/client";
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -23,9 +23,9 @@ export default async function Home({ searchParams }: Props) {
       <div className="max-4xl flex w-full justify-end">
         {/* <AskAiButton/> */}
 
-      <NewNoteButton user={user} />  
+      {/* <NewNoteButton user={user} />   */}
       </div>
-      <NoteTextInput noteId={noteId} startingNoteText={note?.text || ""} />
+      <NoteTextInput noteId={noteId} startingNoteText={note?.text || ""} user={user} />
     </div>
   );
 }

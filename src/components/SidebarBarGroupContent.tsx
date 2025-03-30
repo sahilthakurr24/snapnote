@@ -8,6 +8,7 @@ import Fuse from "fuse.js";
 import SelectNoteButton from "./SelectNoteButton";
 import DeleteNoteButton from "./DeleteNoteButton";
 
+
 interface Prop {
   notes: Note[];
 }
@@ -35,7 +36,7 @@ function SidebarBarGroupContent({ notes }: Prop) {
     ? fuse.search(searchText).map((result) => result.item)
     : localNotes;
 
-  console.log("notes", filteredNotes);
+  // console.log("notes", filteredNotes);
 
   return (
     <SidebarGroupContentShadCn>
@@ -47,15 +48,16 @@ function SidebarBarGroupContent({ notes }: Prop) {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
+     
       </div>
       <SidebarMenu>
-        {filteredNotes.map((note) => (
+       {filteredNotes.length===0 ? ("No Notes "): ( filteredNotes.map((note) => (
           <SidebarMenuItem key={note.id} className="group/item">
             <SelectNoteButton note={note} />
             {note.text}
             <DeleteNoteButton noteId={note.id} deleteNoteLocally={deleteNoteLocally} />
           </SidebarMenuItem>
-        ))}
+        )))}
       </SidebarMenu>
     </SidebarGroupContentShadCn>
   );

@@ -10,10 +10,11 @@ import { createaNoteAction } from "@/actions/note";
 import { useToast } from "@/hooks/use-toast";
 
 type Props = {
-  user: User | null;
+  user: any,
+  noteText : string
 };
 
-function NewNoteButton({ user }: Props) {
+function NewNoteButton({ user , noteText}: Props) {
   const router = useRouter();
   const {toast} = useToast();
 
@@ -26,7 +27,7 @@ function NewNoteButton({ user }: Props) {
       setLoading(true);
 
       const uuid = uuidv4();
-      await createaNoteAction(uuid);
+      await createaNoteAction(uuid, noteText);
       toast({
         title : "Success",
         description : "Note Added Successfully",
@@ -42,7 +43,7 @@ function NewNoteButton({ user }: Props) {
     <Button
       onClick={handleClickNewNoteButton}
       variant="secondary"
-      className="w-24"
+      className="w-24 cursor-pointer"
       disabled={loading}
     >
       {loading ? <Loader2 className="animate-spin" /> : "New Note"}

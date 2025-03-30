@@ -17,7 +17,7 @@ export async function updateNoteAction(noteId: string, text: string) {
   }
 }
 
-export async function createaNoteAction(noteId: string) {
+export async function createaNoteAction(noteId: string, noteText : string) {
   try {
   
     const user =  await getUser();
@@ -30,7 +30,7 @@ export async function createaNoteAction(noteId: string) {
       data: {
         id: noteId,
         authorId: user.id,
-        text: "",
+        text: noteText,
       },
     });
   } catch (error) {
