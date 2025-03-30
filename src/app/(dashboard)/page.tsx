@@ -1,14 +1,31 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 
-export default function Home() {
+import { getUser } from "@/auth/server";
+import NewNoteButton from "@/components/NewNoteButton";
+import NoteTextInput from "@/components/NoteTextInput";
+import { Button } from "@/components/ui/button";
+
+interface Props {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+export default async function Home({ searchParams }: Props) {
+  const noteIdParams = (await searchParams).noteId;
+  const user = await getUser();
+  const noteId = Array.isArray(noteIdParams)
+    ? noteIdParams![0]
+    : noteIdParams || "";
+
+  const note = await prisma?.note.findUnique({
+    where: { id: noteId, authorId: user?.id },
+  });
+  console.log("notedid from home:", noteId);
   return (
-    <div className="">
-      <div className="">
-     
+    <div className="flex h-full flex-col items-center gap-4">
+      <div className="max-4xl flex w-full justify-end">
+        {/* <AskAiButton/> */}
+
+      <NewNoteButton user={user} />  
       </div>
+      <NoteTextInput noteId={noteId} startingNoteText={note?.text || ""} />
     </div>
   );
 }

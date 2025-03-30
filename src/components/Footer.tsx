@@ -14,7 +14,7 @@ export function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           {/* Brand Section */}
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold">Your Brand</h3>
+            <h3 className="text-lg font-semibold">SnapNote</h3>
             <p className="text-sm text-muted-foreground">
               Making your experience better
             </p>
