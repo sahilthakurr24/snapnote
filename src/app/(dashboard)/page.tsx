@@ -23,7 +23,7 @@ export default async function Home({ searchParams }: Props) {
       <div className="max-4xl flex w-full justify-end">
         {/* <AskAiButton/> */}
 
-      {/* <NewNoteButton user={user} />   */}
+    
       </div>
       <NoteTextInput noteId={noteId} startingNoteText={note?.text || ""} user={user} />
     </div>

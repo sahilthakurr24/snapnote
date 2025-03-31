@@ -6,19 +6,23 @@ import { ModeToggle } from "./Mode-toggle";
 import LogoutButton from "./LogoutButton";
 import { Separator } from "./ui/separator";
 import { getUser } from "@/auth/server";
+import { SidebarTrigger } from "./ui/sidebar";
 
-async function Navbar() {
+export async function Navbar() {
   const user = await getUser();
   return (
     <header
       className="bg-popover relative flex h-24 w-full items-center justify-between border px-3 sm:px-8"
       style={{ boxShadow: shadow }}
     >
-      <Link prefetch={false} className="flex items-end gap-2" href={"/"}>
-        <h1 className="flex flex-col pb-1 text-2xl leading-6 font-semibold">
-          SnapNote
-        </h1>
-      </Link>
+      <div className="flex items-center gap-4">
+        <SidebarTrigger className="cursor-pointer" />
+        <Link prefetch={false} className="flex items-end gap-2" href={"/"}>
+          <h1 className="flex flex-col pb-1 text-2xl font-semibold leading-6">
+            SnapNote
+          </h1>
+        </Link>
+      </div>
       <div className="flex gap-4">
         {user ? (
           <LogoutButton />
@@ -41,5 +45,3 @@ async function Navbar() {
     </header>
   );
 }
-
-export default Navbar;

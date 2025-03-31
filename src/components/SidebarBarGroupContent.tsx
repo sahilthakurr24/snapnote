@@ -7,6 +7,8 @@ import { Input } from "./ui/input";
 import Fuse from "fuse.js";
 import SelectNoteButton from "./SelectNoteButton";
 import DeleteNoteButton from "./DeleteNoteButton";
+import UpdateNoteButton from "./UpdateNoteButton";
+import { useNote } from "@/hooks/useNote";
 
 
 interface Prop {
@@ -15,8 +17,8 @@ interface Prop {
 
 function SidebarBarGroupContent({ notes }: Prop) {
   const [searchText, setSearchText] = useState("");
-  const [localNotes, setLocalNotes] = useState(notes);
-
+  const [localNotes, setLocalNotes] = useState<Note[]>(notes);
+  const {noteText} = useNote();
   useEffect(() => {
     setLocalNotes(notes);
   }, [notes]);
@@ -31,6 +33,14 @@ function SidebarBarGroupContent({ notes }: Prop) {
   const deleteNoteLocally = (noteId: string) => {
     setLocalNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
   };
+ 
+  const updateNoteLocally = (noteId: string, newText: string) => {
+    setLocalNotes(prevNotes =>
+      prevNotes.map(note =>
+        note.id === noteId ? { ...note, text: newText } : note
+      )
+    );
+  };
 
   const filteredNotes = searchText
     ? fuse.search(searchText).map((result) => result.item)
@@ -41,9 +51,9 @@ function SidebarBarGroupContent({ notes }: Prop) {
   return (
     <SidebarGroupContentShadCn>
       <div className="relative flex items-center">
-        <SearchIcon className="absolute left-2 size-4" />
+        <SearchIcon className="absolute left-2 size-4 mb-4" />
         <Input
-          className="mg-muted pl-8"
+          className="mg-muted pl-8 mb-4 "
           placeholder="Search your notes"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -51,11 +61,11 @@ function SidebarBarGroupContent({ notes }: Prop) {
      
       </div>
       <SidebarMenu>
-       {filteredNotes.length===0 ? ("No Notes "): ( filteredNotes.map((note) => (
+       {filteredNotes.length===0 ? (<div className="mt-6 w-full truncate overflow-hidden text-ellipsis whitespace-nowrap">Empty Notes</div>): ( filteredNotes.map((note) => (
           <SidebarMenuItem key={note.id} className="group/item">
             <SelectNoteButton note={note} />
-            {note.text}
             <DeleteNoteButton noteId={note.id} deleteNoteLocally={deleteNoteLocally} />
+            <UpdateNoteButton updateNoteLocally={updateNoteLocally} noteText= {noteText} noteId={note.id}/>
           </SidebarMenuItem>
         )))}
       </SidebarMenu>

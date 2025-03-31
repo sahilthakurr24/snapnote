@@ -5,27 +5,24 @@ import { getUser } from "@/auth/server";
 
 export async function updateNoteAction(noteId: string, text: string) {
   try {
- 
     const user = await getUser();
     if (!user) {
       throw new Error("NO user");
     }
 
-    await prisma?.note.update({ where: { id: noteId }, data: { text : text } });
+    await prisma?.note.update({ where: { id: noteId }, data: { text: text } });
   } catch (error) {
     console.error(error);
   }
 }
 
-export async function createaNoteAction(noteId: string, noteText : string) {
+export async function createaNoteAction(noteId: string, noteText: string) {
   try {
-  
-    const user =  await getUser();
+    const user = await getUser();
     if (!user) {
       throw new Error("Plese login to add a Note");
     }
 
-  
     await prisma?.note.create({
       data: {
         id: noteId,
@@ -44,8 +41,16 @@ export async function getNotes(userId: string) {
       where: { authorId: userId },
       orderBy: { updatedAt: "desc" },
     });
-    return {notes : notes }
+    return { notes: notes };
   } catch (error) {
     console.error("Something went wrong", error);
+  }
+}
+
+export async function DeleteNoteAction(noteId: string) {
+  try {
+    await prisma.note.delete({ where: { id: noteId } });
+  } catch (error) {
+    console.error("Unable to delete note");
   }
 }

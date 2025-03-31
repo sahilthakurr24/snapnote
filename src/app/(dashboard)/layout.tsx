@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import type { Metadata } from "next";
 import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";

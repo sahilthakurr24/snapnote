@@ -8,15 +8,18 @@ import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { createaNoteAction } from "@/actions/note";
 import { useToast } from "@/hooks/use-toast";
+import { useNote } from "@/hooks/useNote";
+import { text } from "stream/consumers";
 
 type Props = {
   user: any,
-  noteText : string
+  Text : string
 };
 
-function NewNoteButton({ user , noteText}: Props) {
+function NewNoteButton({ user , Text}: Props) {
   const router = useRouter();
   const {toast} = useToast();
+  const {noteText} = useNote();
 
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +30,7 @@ function NewNoteButton({ user , noteText}: Props) {
       setLoading(true);
 
       const uuid = uuidv4();
-      await createaNoteAction(uuid, noteText);
+      await createaNoteAction(uuid, Text);
       toast({
         title : "Success",
         description : "Note Added Successfully",
@@ -38,6 +41,7 @@ function NewNoteButton({ user , noteText}: Props) {
       setLoading(false);
     }
   };
+
 
   return (
     <Button

@@ -36,16 +36,16 @@ function NoteTextInput({ noteId, startingNoteText, user }: Props) {
     const text = e.target.value;
     setNoteText(text);
 
-    clearTimeout(updateTimeout);
-    updateTimeout = setTimeout(async () => {
-      await updateNoteAction(noteId, text);
-    }, debounceTimeout);
+    // clearTimeout(updateTimeout);
+    // updateTimeout = setTimeout(async () => {
+    //   await updateNoteAction(noteId, text);
+    // }, debounceTimeout);
   };
 
   return (
     <div className="relative">
       <div className="absolute right-0 -top-10 mb-5">
-        <NewNoteButton user={user} noteText={noteText} />
+        <NewNoteButton user={user} Text={noteText} />
       </div>
       <Textarea
         value={noteText}
