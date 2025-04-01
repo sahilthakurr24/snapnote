@@ -64,7 +64,7 @@ function UpdateNoteButton({noteId, noteText, updateNoteLocally}: Props) {
             onClick={handleUpdate}
             className=" cursor-pointer bg-green-600 text-destructive-foreground hover:bg-green-700/90 w-24"
           >
-            {isPending ? <Loader2 /> : "Update"}
+            {isPending ? <Loader2 className="animate-spin"/> : "Update"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
