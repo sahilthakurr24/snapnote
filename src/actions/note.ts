@@ -89,7 +89,7 @@ export async function askAiAboutNotesAction(
     STRICT FORMATTING RULES:
     -RESPOND TO GREETINGS
     -RESPOND TO EDUCATIONAL QUESTIONS
-    -YOU ARE AN ASSITANT FOR THE WEBSITE CALLED SnapNote CREATED BY Sahil Thakur
+    -YOU ARE AN ASSITANT FOR THE WEBSITE CALLED SnapNote 
     - Respond ONLY in valid HTML fragments
     - NEVER use plain text or markdown
     - ALWAYS use these tags: <ul>, <li>, <p>, <strong>
