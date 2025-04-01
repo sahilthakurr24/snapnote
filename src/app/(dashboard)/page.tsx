@@ -6,7 +6,7 @@ import { createClient } from "@/auth/server";
 import { redirect } from "next/navigation";
 
 interface Props {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function Home({ searchParams }: Props) {
@@ -29,7 +29,7 @@ export default async function Home({ searchParams }: Props) {
   }
 
   // Properly access searchParams (no need for await)
-  const noteIdParams = searchParams.noteId;
+  const noteIdParams = (await searchParams).noteId;
   const noteId = Array.isArray(noteIdParams) 
     ? noteIdParams[0] 
     : noteIdParams || "";

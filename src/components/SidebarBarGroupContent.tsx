@@ -16,6 +16,7 @@ interface Prop {
 }
 
 function SidebarBarGroupContent({ notes }: Prop) {
+  console.log(notes ,"sidebar notes")
   const [searchText, setSearchText] = useState("");
   const [localNotes, setLocalNotes] = useState<Note[]>(notes);
   const {noteText} = useNote();

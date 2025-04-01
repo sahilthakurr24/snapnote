@@ -23,7 +23,7 @@ export async function createaNoteAction(noteId: string, noteText: string) {
       throw new Error("Plese login to add a Note");
     }
 
-    await prisma?.note.create({
+    await prisma?.note?.create({
       data: {
         id: noteId,
         authorId: user.id,
