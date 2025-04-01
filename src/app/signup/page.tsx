@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { useTransition } from "react";
 import { signup } from "@/actions/user";
 import { Loader2 } from "lucide-react";

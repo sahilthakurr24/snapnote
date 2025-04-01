@@ -1,8 +1,6 @@
 "use server";
-
 import { prisma } from "@/lib/primsa";
 import { getUser } from "@/auth/server";
-import { Note } from "@prisma/client";
 import { gemini } from "@/gemini";
 
 export async function updateNoteAction(noteId: string, text: string) {
@@ -57,7 +55,6 @@ export async function DeleteNoteAction(noteId: string) {
   }
 }
 
-
 export async function askAiAboutNotesAction(
   newQuestion: string[],
   responses: string[],
@@ -79,10 +76,11 @@ export async function askAiAboutNotesAction(
     }
 
     const formattedNotes = notes
-      .map((note) => 
-        `Text: ${note.text}\n` +
-        `Created: ${note.createdAt.toISOString()}\n` +
-        `Updated: ${note.updatedAt.toISOString()}\n\n`
+      .map(
+        (note) =>
+          `Text: ${note.text}\n` +
+          `Created: ${note.createdAt.toISOString()}\n` +
+          `Updated: ${note.updatedAt.toISOString()}\n\n`,
       )
       .join("");
 
@@ -117,63 +115,69 @@ export async function askAiAboutNotesAction(
     const messages = [
       {
         role: "user",
-        parts: [{ text: systemPrompt }]
+        parts: [{ text: systemPrompt }],
       },
       // Format enforcement examples
       {
         role: "user",
-        parts: [{ text: "What are the key milestones?" }]
+        parts: [{ text: "What are the key milestones?" }],
       },
       {
         role: "model",
-        parts: [{
-          text: "<ul><li><strong>Bad response:</strong> This would be rejected</li></ul>"
-        }]
+        parts: [
+          {
+            text: "<ul><li><strong>Bad response:</strong> This would be rejected</li></ul>",
+          },
+        ],
       },
       {
         role: "user",
-        parts: [{ text: "That's incorrect formatting. Use proper HTML list structure" }]
+        parts: [
+          {
+            text: "That's incorrect formatting. Use proper HTML list structure",
+          },
+        ],
       },
       {
         role: "model",
-        parts: [{
-          text: "<ul><li><strong>1651:</strong> William Harvey proposed fertilization theory</li><li><strong>1780:</strong> Spallanzani demonstrated sperm necessity</li></ul>"
-        }]
-      }
+        parts: [
+          {
+            text: "<ul><li><strong>1651:</strong> William Harvey proposed fertilization theory</li><li><strong>1780:</strong> Spallanzani demonstrated sperm necessity</li></ul>",
+          },
+        ],
+      },
     ];
 
     // Add conversation history
     for (let i = 0; i < newQuestion.length; i++) {
       messages.push({
         role: "user",
-        parts: [{ text: newQuestion[i] }]
+        parts: [{ text: newQuestion[i] }],
       });
-      
+
       if (responses[i]) {
         messages.push({
           role: "model",
-          parts: [{ text: responses[i] }]
+          parts: [{ text: responses[i] }],
         });
       }
     }
 
     // Gemini API call with format enforcement
     const result = await gemini.models.generateContent({
-      model: "gemini-2.0-flash", 
+      model: "gemini-2.0-flash",
       contents: messages,
-    
     });
 
     // Proper response extraction
     const text = result.text || "No response generated";
-    
+
     // Final format validation
     if (!/<(ul|li|p)[^>]*>/.test(text)) {
       return `<p>Formatting error: ${text}</p>`;
     }
-    
-    return text;
 
+    return text;
   } catch (error) {
     console.error("AI Error:", error);
     return "<p>Sorry, I encountered an error. Please try again.</p>";

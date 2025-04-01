@@ -4,7 +4,6 @@ import React from "react";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./Mode-toggle";
 import LogoutButton from "./LogoutButton";
-import { Separator } from "./ui/separator";
 import { getUser } from "@/auth/server";
 import { SidebarTrigger } from "./ui/sidebar";
 

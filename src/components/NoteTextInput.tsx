@@ -2,10 +2,9 @@
 import { useSearchParams } from "next/navigation";
 import React, { ChangeEvent, useEffect } from "react";
 import { Textarea } from "./ui/textarea";
-import { debounceTimeout } from "@/lib/constants";
 import { useNote } from "@/hooks/useNote";
 import { updateNoteAction } from "@/actions/note";
-import { User } from "@prisma/client";
+
 import NewNoteButton from "./NewNoteButton";
 import AskAiButton from "./AskAiButton";
 

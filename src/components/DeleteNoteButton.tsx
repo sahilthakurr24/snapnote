@@ -1,5 +1,4 @@
 "use client";
-import { Note } from "@prisma/client";
 import React, { useTransition } from "react";
 import {
   AlertDialog,
