@@ -12,7 +12,7 @@ export async function updateNoteAction(noteId: string, text: string) {
 
     await prisma?.note.update({ where: { id: noteId }, data: { text: text } });
   } catch (error) {
-    console.error(error);
+    console.error("unable to update",error);
   }
 }
 
@@ -31,7 +31,7 @@ export async function createaNoteAction(noteId: string, noteText: string) {
       },
     });
   } catch (error) {
-    console.error("Unable to create Note");
+    console.error("Unable to create Note", error);
   }
 }
 
@@ -51,7 +51,7 @@ export async function DeleteNoteAction(noteId: string) {
   try {
     await prisma.note.delete({ where: { id: noteId } });
   } catch (error) {
-    console.error("Unable to delete note");
+    console.error("Unable to delete note", error);
   }
 }
 

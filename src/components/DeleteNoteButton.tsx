@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Ghost, Loader2, Trash2 } from "lucide-react";
+import {  Loader2, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { DeleteNoteAction } from "@/actions/note";

@@ -65,7 +65,7 @@ export async function logout() {
     await supabase.auth.signOut();
     revalidatePath("/", "layout");
     redirect("/login");
-  } catch (error) {
-    throw new Error("unable to logout");
+  } catch (error : any) {
+    throw new Error("unable to logout",error);
   }
 }

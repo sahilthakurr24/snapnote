@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
 import { signup } from "@/actions/user";
 import { Loader2 } from "lucide-react";
-import { toast, useToast } from "@/hooks/use-toast";
+import {  useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const [isPending, startTransition] = useTransition();
@@ -28,7 +28,8 @@ export default function LoginPage() {
     }
       });
     } catch (error) {
-      console.log("something went wrong");
+
+      console.log("something went wrong", error);
     }
   };
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, {  useTransition } from "react";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { logout } from "@/actions/user";
@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 
 
  function LogoutButton() {
-const [loading, setLoading] = useState(false);
+
 const [isPending, startTransition]  = useTransition();
 const {toast} = useToast();
 
@@ -22,13 +22,13 @@ const handleLogout = ()=>{
         })
     })
         
-    } catch (error) {
+    } catch (error : any) {
         toast({
             title : "error",
             description : "Unable to logout",
             variant : "destructive"
         })
-        throw new Error("Cant logout user")
+        throw new Error("Cant logout user", error)
     }
 }
     return (

@@ -3,18 +3,19 @@ import { useSearchParams } from "next/navigation";
 import React, { ChangeEvent, useEffect } from "react";
 import { Textarea } from "./ui/textarea";
 import { useNote } from "@/hooks/useNote";
-import { updateNoteAction } from "@/actions/note";
+
 
 import NewNoteButton from "./NewNoteButton";
 import AskAiButton from "./AskAiButton";
+import { User } from "@prisma/client";
 
 interface Props {
   noteId: string;
-  user: any;
+  user: User;
   startingNoteText: string;
 }
 
-let updateTimeout: NodeJS.Timeout;
+
 
 function NoteTextInput({ noteId, startingNoteText, user }: Props) {
   const noteIdParams = useSearchParams().get("noteId") || "";
@@ -35,11 +36,6 @@ function NoteTextInput({ noteId, startingNoteText, user }: Props) {
   const handleUpdateNote = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
     setNoteText(text);
-
-    // clearTimeout(updateTimeout);
-    // updateTimeout = setTimeout(async () => {
-    //   await updateNoteAction(noteId, text);
-    // }, debounceTimeout);
   };
 
   return (

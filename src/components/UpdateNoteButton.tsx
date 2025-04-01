@@ -6,16 +6,15 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Ghost, Loader2, Trash2, Upload } from "lucide-react";
+import {Loader2, Upload } from "lucide-react";
 import { Button } from "./ui/button";
 import { toast, useToast } from "@/hooks/use-toast";
-import Link from "next/link";
+
 import { updateNoteAction } from "@/actions/note";
 interface Props{
     noteId : string
@@ -37,7 +36,7 @@ function UpdateNoteButton({noteId, noteText, updateNoteLocally}: Props) {
             })
            })
         } catch (error) {
-            console.error("Unable to update")
+            console.error("Unable to update", error)
         }
 
     }

@@ -44,11 +44,11 @@ export default function LoginPage() {
         }
 
       });
-    } catch (error) {
+    } catch (error : any) {
       console.log("something went wrong");
       toast({
         title : "error",
-        description : " Unable to Login",
+        description : error.message || 'Something went wrong',
         variant : "destructive"
     })
     }

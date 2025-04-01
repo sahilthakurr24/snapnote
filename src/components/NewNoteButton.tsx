@@ -6,18 +6,18 @@ import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { createaNoteAction } from "@/actions/note";
 import { useToast } from "@/hooks/use-toast";
-import { useNote } from "@/hooks/useNote";
-import { text } from "stream/consumers";
+import { User } from "@prisma/client";
+
 
 type Props = {
-  user: any,
+  user: User,
   Text : string
 };
 
 function NewNoteButton({ user , Text}: Props) {
   const router = useRouter();
   const {toast} = useToast();
-  const {noteText} = useNote();
+
 
   const [loading, setLoading] = useState(false);
 
