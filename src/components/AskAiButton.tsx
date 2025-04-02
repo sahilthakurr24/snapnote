@@ -1,6 +1,11 @@
 "use client";
-import React, { Fragment, useRef, useState, useTransition } from "react";
-
+import React, {
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { Button } from "./ui/button";
 import { ArrowUpIcon, Bot } from "lucide-react";
 import {
@@ -20,6 +25,7 @@ import "../styles/ai-response.css";
 interface Props {
   user: User | null;
 }
+
 function AskAiButton({ user }: Props) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -28,6 +34,11 @@ function AskAiButton({ user }: Props) {
   const [question, setQuestions] = useState<string[]>([]);
   const [responses, setResponses] = useState<string[]>([]);
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+
+
   const handleOpenChange = (isOpen: boolean) => {
     if (!user) {
       router.push("/login");
@@ -35,36 +46,12 @@ function AskAiButton({ user }: Props) {
 
     if (isOpen) {
       setQuestionText("");
-      setQuestions([]);
-      setResponses([]);
     }
     setOpen(isOpen);
   };
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const handleInput = () => {
-    const textarea = textareaRef.current;
-    if (!textarea) {
-      return;
-    }
-
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-  };
-
-  const handleClickInput = () => {
-    textareaRef.current?.focus();
-  };
-
   const handleSubmit = () => {
-    // Fix the empty check condition
-    if (!questionText.trim()) {
-      return;
-    }
+    if (!questionText.trim()) return;
 
     const newQuestion = [...question, questionText];
     setQuestions(newQuestion);
@@ -75,16 +62,30 @@ function AskAiButton({ user }: Props) {
     startTransition(async () => {
       try {
         const response = await askAiAboutNotesAction(newQuestion, responses);
-
         if (response !== undefined) {
-          setResponses((prev) => [...prev, response]);
+          const newResponses = [...responses, response];
+          setResponses(newResponses);
+
+          // Save chat history to localStorage
+          localStorage.setItem(
+            "chatHistory",
+            JSON.stringify({ questions: newQuestion, responses: newResponses }),
+          );
         }
       } catch (error) {
         console.error("AI request failed:", error);
-        setResponses((prev) => [
-          ...prev,
-          "Sorry, I couldn't process your request. Please try again.",
-        ]);
+        const errorMessage =
+          "Sorry, I couldn't process your request. Please try again.";
+        setResponses((prev) => [...prev, errorMessage]);
+
+        // Save chat history to localStorage
+        localStorage.setItem(
+          "chatHistory",
+          JSON.stringify({
+            questions: newQuestion,
+            responses: [...responses, errorMessage],
+          }),
+        );
       }
 
       setTimeout(scrollToBottom, 100);
@@ -126,26 +127,25 @@ function AskAiButton({ user }: Props) {
         </DialogHeader>
 
         <div className="mt-4 flex flex-1 flex-col gap-6">
-          {question.map((question, index) => (
-            <Fragment key={index}>
-              {/* User Question Bubble */}
-              <div className="ml-auto max-w-[80%]">
-                <p className="rounded-lg bg-blue-600 px-4 py-3 text-sm text-white shadow-sm">
-                  {question}
-                </p>
-              </div>
-
-              {/* AI Response */}
-              {responses[index] && (
-                <div className="max-w-[80%]">
-                  <p
-                    className="bot-response text-muted-foreground text-sm"
-                    dangerouslySetInnerHTML={{ __html: responses[index] }}
-                  />
+          {Array.isArray(question) &&
+            question.map((question, index) => (
+              <Fragment key={index}>
+                <div className="ml-auto max-w-[80%]">
+                  <p className="rounded-lg bg-blue-600 px-4 py-3 text-sm text-white shadow-sm">
+                    {question}
+                  </p>
                 </div>
-              )}
-            </Fragment>
-          ))}
+
+                {responses[index] && (
+                  <div className="max-w-[80%]">
+                    <p
+                      className="bot-response text-muted-foreground text-sm"
+                      dangerouslySetInnerHTML={{ __html: responses[index] }}
+                    />
+                  </div>
+                )}
+              </Fragment>
+            ))}
 
           {isPending && (
             <div className="flex items-center gap-2 text-gray-500">
@@ -155,18 +155,16 @@ function AskAiButton({ user }: Props) {
           )}
         </div>
 
-        {/* Input Area */}
         <div className="bg-background mt-8 flex cursor-text flex-col rounded-lg border shadow-sm transition-colors hover:border-gray-300">
           <div
             className="flex items-end justify-between gap-4 p-4"
-            onClick={handleClickInput}
+            onClick={() => textareaRef.current?.focus()}
           >
             <Textarea
               ref={textareaRef}
               placeholder="Ask me anything about your notes..."
               className="light:text-black flex min-h-[40px] w-full resize-none justify-center border-0 bg-transparent p-0 text-base font-semibold shadow-none ring-0 outline-none placeholder:text-gray-400 focus:ring-0 focus-visible:ring-0 dark:text-white"
               rows={1}
-              onInput={handleInput}
               onKeyDown={handleKeyDown}
               value={questionText}
               onChange={(e) => setQuestionText(e.target.value)}
