@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useRef, useState, useTransition } from "react";
+import React, { Fragment, useEffect, useRef, useState, useTransition } from "react";
 
 import { Button } from "./ui/button";
 import { ArrowUpIcon, Bot } from "lucide-react";
@@ -17,6 +17,7 @@ import { Textarea } from "./ui/textarea";
 import { askAiAboutNotesAction } from "@/actions/note";
 import "../styles/ai-response.css";
 
+
 interface Props {
   user: User | null;
 }
@@ -28,7 +29,30 @@ function AskAiButton({ user }: Props) {
   const [question, setQuestions] = useState<string[]>([]);
   const [responses, setResponses] = useState<string[]>([]);
 
+  // useEffect(()=>{
+  //   const getChatHistory = localStorage.getItem("chatHistory");
+  //   if (getChatHistory) {
+  //     setQuestions([JSON.parse(getChatHistory)]);
+  //   }
+  // },[open])
+
+  useEffect(() => {
+    const chatHistory = { question, responses };
+    localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+    console.log(chatHistory);
+    
+  }, [question, responses]);
+  
+useEffect(()=>{
+  const getChatHistory = localStorage.getItem("chatHistory");
+  const parsedChatHistory = getChatHistory ? JSON.parse(getChatHistory).question.response || [] : [];
+  console.log("local chat", parsedChatHistory);
+  setQuestions(parsedChatHistory);
+},[responses])
+  
   const handleOpenChange = (isOpen: boolean) => {
+
+   
     if (!user) {
       router.push("/login");
     }
@@ -60,16 +84,25 @@ function AskAiButton({ user }: Props) {
     textareaRef.current?.focus();
   };
 
+
+
+
+
   const handleSubmit = () => {
     // Fix the empty check condition
     if (!questionText.trim()) {
       return;
     }
 
+    
+
     const newQuestion = [...question, questionText];
     setQuestions(newQuestion);
     setQuestionText("");
+  
 
+  
+    
     setTimeout(scrollToBottom, 100);
 
     startTransition(async () => {
@@ -78,6 +111,7 @@ function AskAiButton({ user }: Props) {
 
         if (response !== undefined) {
           setResponses((prev) => [...prev, response]);
+        
         }
       } catch (error) {
         console.error("AI request failed:", error);
