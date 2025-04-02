@@ -17,7 +17,6 @@ import { Textarea } from "./ui/textarea";
 import { askAiAboutNotesAction } from "@/actions/note";
 import "../styles/ai-response.css";
 
-
 interface Props {
   user: User | null;
 }
@@ -28,10 +27,8 @@ function AskAiButton({ user }: Props) {
   const [questionText, setQuestionText] = useState("");
   const [question, setQuestions] = useState<string[]>([]);
   const [responses, setResponses] = useState<string[]>([]);
-  
-  const handleOpenChange = (isOpen: boolean) => {
 
-   
+  const handleOpenChange = (isOpen: boolean) => {
     if (!user) {
       router.push("/login");
     }
@@ -63,17 +60,11 @@ function AskAiButton({ user }: Props) {
     textareaRef.current?.focus();
   };
 
-
-
-
-
   const handleSubmit = () => {
     // Fix the empty check condition
     if (!questionText.trim()) {
       return;
     }
-
-    
 
     const newQuestion = [...question, questionText];
     setQuestions(newQuestion);
@@ -87,7 +78,6 @@ function AskAiButton({ user }: Props) {
 
         if (response !== undefined) {
           setResponses((prev) => [...prev, response]);
-        
         }
       } catch (error) {
         console.error("AI request failed:", error);
