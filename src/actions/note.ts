@@ -169,7 +169,7 @@ export async function askAiAboutNotesAction(
       contents: messages,
     });
 
-    // Proper response extraction
+  
     const text = result.text || "No response generated";
 
     // Final format validation

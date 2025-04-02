@@ -1,55 +1,60 @@
-import { getUser } from "@/auth/server";
-import NoteTextInput from "@/components/NoteTextInput";
-import { prisma } from "@/lib/primsa";
 import { User } from "@prisma/client";
-import { createClient } from "@/auth/server";
 import { redirect } from "next/navigation";
+import { createClient } from "@/auth/server";
+import { getUser } from "@/auth/server";
+import { prisma } from "@/lib/primsa";
+import NoteTextInput from "@/components/NoteTextInput";
 
-interface Props {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function Home({ searchParams }: Props) {
-  const supabase =  await createClient();
-
-  // Properly destructure session from getSession()
+export default async function Home({ searchParams }: PageProps) {
+ 
+  const supabase = await  createClient();
   const { data: { session } } = await supabase.auth.getSession();
 
-  // Redirect to login if no session found
-  if (!session) {
-    redirect("/login");
-  }
+
+  if (!session) redirect("/login");
+
 
   const user = (await getUser()) as User | null;
-
-  // Handle case where user doesn't exist in database
   if (!user) {
-    console.error("User not found in database");
+    console.error("Authentication error: No user record found");
     redirect("/login");
   }
 
-  // Properly access searchParams (no need for await)
-  const noteIdParams = (await searchParams).noteId;
-  const noteId = Array.isArray(noteIdParams) 
-    ? noteIdParams[0] 
-    : noteIdParams || "";
 
-  // Fetch note only if noteId exists
-  const note = noteId ? await prisma.note.findUnique({
-    where: { 
-      id: noteId,
-      authorId: user.id 
-    },
-  }) : null;
+  const noteIdParam = searchParams.noteId;
+  const noteId = Array.isArray(noteIdParam) 
+    ? noteIdParam[0] 
+    : noteIdParam || ""
+
+ 
+  const existingNote = noteId
+    ? await prisma.note.findUnique({
+        where: { 
+          id: noteId,
+          authorId: user.id 
+        },
+      })
+    : null;
 
   return (
     <div className="flex h-full flex-col items-center gap-4">
-      <div className="max-4xl flex w-full justify-end"></div>
-      <NoteTextInput
-        noteId={noteId}
-        startingNoteText={note?.text || ""}
-        user={user}
-      />
+      <div className="max-4xl flex w-full justify-end">
+       
+      </div>
+      
+      {user ? (
+        <NoteTextInput
+          noteId={noteId}
+          startingNoteText={existingNote?.text || ""}
+          user={user}
+        />
+      ) : (
+        "Please log in to continue"
+      )}
     </div>
   );
 }
