@@ -15,7 +15,7 @@ export async function Navbar() {
       style={{ boxShadow: shadow }}
     >
       <div className="flex items-center gap-4">
-        <SidebarTrigger className="cursor-pointer" />
+        {/* <SidebarTrigger className="cursor-pointer" /> */}
         <Link prefetch={false} className="flex items-end gap-2" href={"/"}>
           <h1 className="flex flex-col pb-1 text-2xl font-semibold leading-6">
             SnapNote

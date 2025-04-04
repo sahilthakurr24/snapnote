@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { createaNoteAction } from "@/actions/note";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@prisma/client";
+import { useNote } from "@/hooks/useNote";
 
 
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
 function NewNoteButton({ user , Text}: Props) {
   const router = useRouter();
   const {toast} = useToast();
+  const {noteText} = useNote();
 
 
   const [loading, setLoading] = useState(false);
@@ -41,16 +43,27 @@ function NewNoteButton({ user , Text}: Props) {
   };
 
 
-  return (
-    <Button
-      onClick={handleClickNewNoteButton}
-      variant="secondary"
-      className="w-24 cursor-pointer"
-      disabled={loading}
-    >
-      {loading ? <Loader2 className="animate-spin" /> : "New Note"}
-    </Button>
-  );
+return (
+  <>
+    {noteText.length === 0 ? (
+      <Button
+        variant="secondary"
+        className="w-24 cursor-pointer"
+      >
+        New Note
+      </Button>
+    ) : (
+      <Button
+        onClick={handleClickNewNoteButton}
+        variant="secondary"
+        className="w-24 cursor-pointer"
+        disabled={loading && noteText.length === 0}
+      >
+        {loading ? <Loader2 className="animate-spin" /> : "New Note"}
+      </Button>
+    )}
+  </>
+);
 }
 
 export default NewNoteButton;
