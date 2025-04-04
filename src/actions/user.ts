@@ -43,7 +43,7 @@ export async function signup(formData: FormData) {
 
   const userId = data.user?.id;
   if (!userId) {
-    throw new Error("Error signing up");
+   return {error}
   }
 
   //    add user to database
